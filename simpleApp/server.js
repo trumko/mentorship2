@@ -15,12 +15,21 @@ http.createServer( function (request, response) {
      })
 
      request.on('end', () => {
-          fs.writeFile('input-data.json', content.toString(),  function(err) {
+       fs.readFile('input-data.json', function (err, data) {
+          if (err) {
+             return console.error(err);
+          }
+          var newObj = JSON.parse(data);
+          newObj.items.push(JSON.parse(content).item);
+
+          fs.writeFile('input-data.json', JSON.stringify(newObj),  function(err) {
             if (err) {
                return console.error(err);
             }
-            response.end(content);
+            response.end(JSON.stringify(newObj));
          });
+       });
+
         });
    }
 
