@@ -34,6 +34,35 @@ http.createServer( function (request, response) {
    }
 
 
+   if (pathname == '/input-data' && request.method == 'DELETE') {
+     fs.readFile('input-data.json', function (err, data) {
+        if (err) {
+           return console.error(err);
+        }
+        var newObj = JSON.parse(data);
+        newObj.items = [];
+
+        fs.writeFile('input-data.json', JSON.stringify(newObj),  function(err) {
+          if (err) {
+             return console.error(err);
+          }
+          response.end(JSON.stringify(newObj));
+       });
+     });
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
    if (pathname == '/input-data' && request.method == 'GET') {
     fs.readFile('input-data.json', function (err, data) {
        if (err) {

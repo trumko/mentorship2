@@ -1,4 +1,3 @@
-// add item to JSON
 $('.add-item').click(function(event) {
   event.preventDefault();
 
@@ -14,13 +13,25 @@ $('.add-item').click(function(event) {
 })
 
 
+$('.del-items').click(function(event) {
+  event.preventDefault();
+
+  $.ajax({
+    method: "DELETE",
+    url: "/input-data",
+  })
+    .done(function( msg ) {
+      $('.all-items').html(generateList(msg));
+  });
+})
+
+
 $(function() {
   $.ajax({
     method: "GET",
     url: "/input-data",
   })
     .done(function( msg ) {
-
       $('.all-items').html(generateList(msg));
   });
 });
