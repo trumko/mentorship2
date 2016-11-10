@@ -8,7 +8,7 @@ http.createServer( function (request, response) {
    var pathname = url.parse(request.url).pathname;
 
    if (pathname == '/input-data' && request.method == 'PUT') {
-     console.log('1111111111111111111111111')
+     console.log('write to page')
      var content = '';
      request.on('data', function(data) {
        content += data;
@@ -26,9 +26,16 @@ http.createServer( function (request, response) {
 
 
    if (pathname == '/input-data' && request.method == 'GET') {
-     console.log('22222222222222222222222222')
+    //  console.log('f5 page', JSON.stringify(json))
 
-     response.end(JSON.stringify(json));
+    //  response.end(JSON.stringify(json));
+
+    fs.readFile('input-data.json', function (err, data) {
+       if (err) {
+          return console.error(err);
+       }
+       response.end(data);
+    });
    }
 
 
