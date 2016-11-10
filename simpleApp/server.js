@@ -2,18 +2,20 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 
+var json = require('./input-data')
+
 http.createServer( function (request, response) {
    var pathname = url.parse(request.url).pathname;
-   console.log(pathname, request.method);
 
-   if (pathname == '/input.txt' && request.method == 'PUT') {
+   if (pathname == '/input-data' && request.method == 'PUT') {
+     console.log('1111111111111111111111111')
      var content = '';
      request.on('data', function(data) {
        content += data;
      })
 
      request.on('end', () => {
-          fs.writeFile('input.txt', content.toString(),  function(err) {
+          fs.writeFile('input-data.json', content.toString(),  function(err) {
             if (err) {
                return console.error(err);
             }
@@ -22,6 +24,16 @@ http.createServer( function (request, response) {
         });
    }
 
+
+   if (pathname == '/input-data' && request.method == 'GET') {
+     console.log('22222222222222222222222222')
+
+     response.end(JSON.stringify(json));
+   }
+
+
+
+   // // Get items from JSON when page loads
    if ((pathname == '/index.html' || pathname == '/script.js') && request.method == 'GET') {
      fs.readFile(pathname.substr(1), function (err, data) {
         if (err) {
@@ -30,7 +42,6 @@ http.createServer( function (request, response) {
         } else {
            response.writeHead(200, {'Content-Type': 'text/html'});
            response.write(data.toString());
-           console.log(data);
         }
         response.end();
      });
