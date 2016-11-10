@@ -26,10 +26,6 @@ http.createServer( function (request, response) {
 
 
    if (pathname == '/input-data' && request.method == 'GET') {
-    //  console.log('f5 page', JSON.stringify(json))
-
-    //  response.end(JSON.stringify(json));
-
     fs.readFile('input-data.json', function (err, data) {
        if (err) {
           return console.error(err);

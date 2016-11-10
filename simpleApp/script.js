@@ -8,7 +8,7 @@ $('.add-item').click(function(event) {
     data: JSON.stringify({item: $('.add-input').val()})
   })
     .done(function( msg ) {
-      console.log( "Data Saved: " + msg );
+      $('.all-items').html(generateList(msg));
   });
 })
 
@@ -19,6 +19,17 @@ $(function() {
     url: "/input-data",
   })
     .done(function( msg ) {
-      console.log( JSON.parse(msg) );
+      $('.all-items').html(generateList(msg));
   });
 });
+
+
+function generateList(jsonData) {
+  var itemList = ''
+  var itemData = JSON.parse(jsonData)
+
+  for (key in itemData) {
+    itemList += '<li>' + itemData[key] + '</li>';
+  }
+  return '<ul>' + itemList + '</ul>'
+}
