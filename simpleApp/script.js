@@ -1,13 +1,21 @@
+// Add item to list on click
 $('.add-item').click(function(event) {
   event.preventDefault();
+  console.log($('.add-input').val())
+
+  if ($('.add-input').val().trim() == '') {
+    $('.add-input').val('');
+    return;
+  }
+
 
   $.ajax({
     method: "PUT",
-    url: "/input-data",
+    url: "/add-item",
     data: JSON.stringify({item: $('.add-input').val()})
   })
     .done(function( msg ) {
-            $('.add-input').val(' ');
+            $('.add-input').val('');
       $('.all-items').html(generateList(msg));
   });
 })
