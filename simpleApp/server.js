@@ -5,7 +5,7 @@ http.createServer( function (request, response) {
   var url = request.url;
 
   // add item to the list
-  if (url == '/add-item' && request.method == 'PUT') {
+  if (url == '/add-item' && request.method == 'POST') {
     console.log('write to page')
     var content = '';
     request.on('data', function(data) {

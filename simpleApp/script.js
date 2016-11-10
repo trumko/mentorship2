@@ -8,7 +8,7 @@ $('.add-item').click(function(event) {
   }
 
   $.ajax({
-    method: 'PUT',
+    method: 'POST',
     url: '/add-item',
     data: JSON.stringify({item: $('.add-input').val()})
   })
