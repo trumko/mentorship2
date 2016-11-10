@@ -1,43 +1,41 @@
 // Add item to list on click
 $('.add-item').click(function(event) {
   event.preventDefault();
-  console.log($('.add-input').val())
 
   if ($('.add-input').val().trim() == '') {
     $('.add-input').val('');
     return;
   }
 
-
   $.ajax({
-    method: "PUT",
-    url: "/add-item",
+    method: 'PUT',
+    url: '/add-item',
     data: JSON.stringify({item: $('.add-input').val()})
   })
-    .done(function( msg ) {
-            $('.add-input').val('');
+    .done( function(msg) {
+      $('.add-input').val('');
       $('.all-items').html(generateList(msg));
   });
 })
 
-
+// Delete all items from list
 $('.del-items').click(function(event) {
   event.preventDefault();
 
   $.ajax({
-    method: "DELETE",
-    url: "/input-data",
+    method: 'DELETE',
+    url: '/delete-items',
   })
-    .done(function( msg ) {
+    .done(function(msg) {
       $('.all-items').html(generateList(msg));
   });
 })
 
-
+// Get all items when page is loaded
 $(function() {
   $.ajax({
-    method: "GET",
-    url: "/input-data",
+    method: 'GET',
+    url: '/get-items',
   })
     .done(function( msg ) {
       $('.all-items').html(generateList(msg));
@@ -46,11 +44,12 @@ $(function() {
 
 
 function generateList(jsonData) {
-  var itemList = '';
   var itemData = JSON.parse(jsonData).items;
+  console.log(itemData)
 
-  for (key in itemData) {
-    itemList += '<li>' + itemData[key] + '</li>';
-  }
+  var itemList = itemData.reduce(function(prevList, current){
+    return prevList + '<li>' + current + '</li>'
+  }, '')
+  console.log(itemList);
   return '<ul>' + itemList + '</ul>'
 }

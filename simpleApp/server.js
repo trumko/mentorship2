@@ -1,13 +1,11 @@
 var http = require('http');
 var fs = require('fs');
-var url = require('url');
-
-var json = require('./input-data')
 
 http.createServer( function (request, response) {
-  var pathname = url.parse(request.url).pathname;
+  var url = request.url;
 
-  if (pathname == '/add-item' && request.method == 'PUT') {
+  // add item to the list
+  if (url == '/add-item' && request.method == 'PUT') {
     console.log('write to page')
     var content = '';
     request.on('data', function(data) {
@@ -33,8 +31,8 @@ http.createServer( function (request, response) {
     });
   }
 
-
-  if (pathname == '/input-data' && request.method == 'DELETE') {
+  // delete item from the list
+  if (url == '/delete-items' && request.method == 'DELETE') {
     var emptyList = '{"items":[]}';
 
     fs.writeFile('input-data.json', emptyList,  function(err) {
@@ -45,9 +43,8 @@ http.createServer( function (request, response) {
     });
   }
 
-
-
-  if (pathname == '/input-data' && request.method == 'GET') {
+  // Get items from JSON when page loads
+  if (url == '/get-items' && request.method == 'GET') {
     fs.readFile('input-data.json', function (err, data) {
       if (err) {
         return console.error(err);
@@ -56,11 +53,9 @@ http.createServer( function (request, response) {
     });
   }
 
-
-
-  // // Get items from JSON when page loads
-  if ((pathname == '/index.html' || pathname == '/script.js') && request.method == 'GET') {
-    fs.readFile(pathname.substr(1), function (err, data) {
+  // load files
+  if ((url == '/index.html' || url == '/script.js') && request.method == 'GET') {
+    fs.readFile(url.substr(1), function (err, data) {
       if (err) {
         console.log(err);
         response.writeHead(404, {'Content-Type': 'text/html'});
@@ -71,7 +66,6 @@ http.createServer( function (request, response) {
         response.end();
      });
   }
-
 }).listen(4000);
 
 console.log('Server running at http://127.0.0.1:4000/');
