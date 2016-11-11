@@ -43,7 +43,16 @@ app.post('/add-item', function (req, res) {
 })
 
 // Dell items
-
+app.delete('/delete-items', function (req, res) {
+   console.log("Delete all items from JSON");
+   var emptyList = '{"items":[]}';
+   fs.writeFile('input-data.json', emptyList,  function(err) {
+     if (err) {
+       return console.error(err);
+     }
+     res.sendFile( __dirname + "/" + 'input-data.json' );
+   });
+})
 
 var server = app.listen(4000, function () {
    var host = server.address().address
