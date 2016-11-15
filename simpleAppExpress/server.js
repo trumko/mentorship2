@@ -2,6 +2,11 @@ var express = require('express');
 var app = express();
 var fs = require("fs");
 
+// ???
+var mongoose = require('mongoose');
+var Item = require('./mongooseConf.js');
+
+
 var bodyParser = require('body-parser');
 
 // app.use(express.static('public'));
@@ -17,7 +22,10 @@ app.get('/index.html', function (req, res) {
 // Get items from the list
 app.get('/get-items', function (req, res) {
    console.log("Load items from json");
-   res.sendFile( __dirname + "/" + 'input-data.json' );
+
+   Item.find({}, function(err, items) {
+     console.log(items);
+   })
 })
 
 // Add item to the list
