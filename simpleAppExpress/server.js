@@ -34,33 +34,34 @@ app.post('/add-item', function (req, res) {
 
   console.log("Add an element to the list");
 
-  fs.readFile('input-data.json', function (err, data) {
-    if (err) {
-      return console.error(err);
-    }
-    var newObj = JSON.parse(data);
-    newObj.items.push(req.body.item);
-    console.log(newObj);
+  Item.find({}, function(err, list) {
+    // console.log(list[0].items);
+    list[0].items.push(req.body.item)
+    // console.log(list[0].items)
 
-    fs.writeFile('input-data.json', JSON.stringify(newObj),  function(err) {
+    list[0].save(function (err, list) {
       if (err) {
-        return console.error(err);
+          res.status(500).send(err)
       }
-      res.sendFile( __dirname + "/" + 'input-data.json' );
+      res.send(list);
     });
-  });
+  })
 })
 
 // Dell items
 app.delete('/delete-items', function (req, res) {
    console.log("Delete all items from JSON");
-   var emptyList = '{"items":[]}';
-   fs.writeFile('input-data.json', emptyList,  function(err) {
-     if (err) {
-       return console.error(err);
-     }
-     res.sendFile( __dirname + "/" + 'input-data.json' );
-   });
+
+   Item.find({}, function(err, list) {
+     list[0].items = [];
+
+     list[0].save(function (err, list) {
+       if (err) {
+           res.status(500).send(err)
+       }
+       res.send(list);
+     });
+   })
 })
 
 var server = app.listen(4000, function () {

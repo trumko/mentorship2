@@ -16,12 +16,12 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
 
   // Create item schema
-  var songSchema = mongoose.Schema({
+  var itemSchema = mongoose.Schema({
     items: []
   });
 
   // Store item documents in a collection called "items"
-  var Item = mongoose.model('List_item', songSchema);
+  var Item = mongoose.model('List_item', itemSchema);
 
 
 // ???
