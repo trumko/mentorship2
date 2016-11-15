@@ -4,12 +4,14 @@
 npm install
 ```
 
-
-
 ## start aplication
 
 ```sh
 node server.js
+```
+or (restarts the server automatically):
+```sh
+npm run dev
 ```
 
 
