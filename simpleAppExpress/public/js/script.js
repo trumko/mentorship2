@@ -38,7 +38,8 @@ $(function() {
     url: '/get-items',
   })
     .done(function( msg ) {
-      $('.all-items').html(generateList(msg.items));
+      console.log(msg[0].items);
+      $('.all-items').html(generateList(msg[0].items));
   });
 });
 
