@@ -17,7 +17,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 
   // Create item schema
   var itemSchema = mongoose.Schema({
-    items: []
+    content: String
   });
 
   // Store item documents in a collection called "items"

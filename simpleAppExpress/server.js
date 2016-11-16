@@ -13,6 +13,11 @@ app.use('/static', express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Load 'index.html' page
+app.get('/', function (req, res) {
+   console.log("Got a GET request for the homepage");
+   res.sendFile( __dirname + "/" + "index.html" );
+})
+
 app.get('/index.html', function (req, res) {
    console.log("Got a GET request for the homepage");
    res.sendFile( __dirname + "/" + "index.html" );
@@ -32,34 +37,22 @@ app.get('/get-items', function (req, res) {
 app.post('/add-item', function (req, res) {
 
   console.log("Add an element to the list");
+  var item = new Item(req.body);
 
-  Item.find({}, function(err, list) {
-    // console.log(list[0].items);
-    list[0].items.push(req.body.item)
-    // console.log(list[0].items)
-
-    list[0].save(function (err, list) {
-      if (err) {
-          res.status(500).send(err)
-      }
-      res.send(list);
-    });
-  })
+  item.save(function (err, TodoObject) {
+    if (err) {
+      res.send(err);
+    }
+      res.send(TodoObject)
+  });
 })
 
 // Dell items
 app.delete('/delete-items', function (req, res) {
-   console.log("Delete all items from JSON");
+  console.log("Delete all items from JSON");
 
-   Item.find({}, function(err, list) {
-     list[0].items = [];
-
-     list[0].save(function (err, list) {
-       if (err) {
-           res.status(500).send(err)
-       }
-       res.send(list);
-     });
+  Item.find({}).remove(function(err, items){
+    res.send('delllll allllll')
    })
 })
 

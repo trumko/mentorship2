@@ -10,11 +10,19 @@ $('.add-item').click(function(event) {
   $.ajax({
     method: 'POST',
     url: '/add-item',
-    data: {item: $('.add-input').val()}
+    data: {content: $('.add-input').val()}
   })
     .done( function(msg) {
       $('.add-input').val('');
-      $('.all-items').html(generateList(msg.items));
+
+      $.ajax({
+        method: 'GET',
+        url: '/get-items',
+      })
+        .done(function( msg ) {
+          console.log(msg);
+          $('.all-items').html(generateList(msg));
+      });
   });
 })
 
@@ -27,7 +35,15 @@ $('.del-items').click(function(event) {
     url: '/delete-items',
   })
     .done(function(msg) {
-      $('.all-items').html(generateList(msg.items));
+      // $('.all-items').html(generateList(msg.items));
+      $.ajax({
+        method: 'GET',
+        url: '/get-items',
+      })
+        .done(function( msg ) {
+          console.log(msg);
+          $('.all-items').html(generateList(msg));
+      });
   });
 })
 
@@ -38,17 +54,15 @@ $(function() {
     url: '/get-items',
   })
     .done(function( msg ) {
-      console.log(msg[0].items);
-      $('.all-items').html(generateList(msg[0].items));
+      console.log(msg);
+      $('.all-items').html(generateList(msg));
   });
 });
 
 
 function generateList(itemData) {
-  console.log(itemData)
-
   var itemList = itemData.reduce(function(prevList, current){
-    return prevList + '<li>' + current + '</li>'
+    return prevList + '<li>' + current.content + '</li>'
   }, '')
   console.log(itemList);
   return '<ul>' + itemList + '</ul>'
