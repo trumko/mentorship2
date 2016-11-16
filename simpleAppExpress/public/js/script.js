@@ -62,8 +62,33 @@ $(function() {
 
 function generateList(itemData) {
   var itemList = itemData.reduce(function(prevList, current){
-    return prevList + '<li>' + current.content + '</li>'
+    return (`${prevList}
+            <li>
+              ${current.content}
+              <button onclick="delItem('${current._id}')">del</button>
+            </li>`)
+    // return prevList + '<li>' + current.content + '</li>'
   }, '')
   console.log(itemList);
   return '<ul>' + itemList + '</ul>'
+}
+
+function delItem(id){
+  console.log(id)
+  $.ajax({
+    method: 'DELETE',
+    url: '/delete-item',
+    data: {id: id}
+  })
+    .done(function(msg) {
+      // $('.all-items').html(generateList(msg.items));
+      $.ajax({
+        method: 'GET',
+        url: '/get-items',
+      })
+        .done(function( msg ) {
+          console.log(msg);
+          $('.all-items').html(generateList(msg));
+      });
+  });
 }

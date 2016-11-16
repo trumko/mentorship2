@@ -2,11 +2,10 @@ var express = require('express');
 var app = express();
 var fs = require("fs");
 
-// ???
 var mongoose = require('mongoose');
-var Item = require('./mongooseConf.js');
-
 var bodyParser = require('body-parser');
+
+var Item = require('./mongooseConf.js');
 
 // app.use(express.static('public'));
 app.use('/static', express.static('public'));
@@ -49,9 +48,19 @@ app.post('/add-item', function (req, res) {
 
 // Dell items
 app.delete('/delete-items', function (req, res) {
-  console.log("Delete all items from JSON");
+  console.log("Delete all items from db");
 
   Item.find({}).remove(function(err, items){
+    res.send('delllll allllll')
+   })
+})
+
+// Dell item
+app.delete('/delete-item', function (req, res) {
+  console.log("Delete single item in db");
+  console.log(req.body.id)
+
+  Item.find({"_id": req.body.id}).remove(function(err, items){
     res.send('delllll allllll')
    })
 })
