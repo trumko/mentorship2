@@ -46,6 +46,21 @@ app.post('/add-item', function (req, res) {
   });
 })
 
+
+// Edit item from the list
+app.put('/edit-item/:id', function (req, res) {
+  console.log("Edit an item from the list");
+  console.log(req.params.id);
+
+  Item.findOne({"_id": req.params.id}, function(err, item){
+    item.content = req.body.content;
+
+    item.save (function(err, item){
+      res.send(item);
+    })
+  })
+})
+
 // Dell items
 app.delete('/delete-items', function (req, res) {
   console.log("Delete all items from db");

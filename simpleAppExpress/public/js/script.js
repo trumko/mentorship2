@@ -1,3 +1,5 @@
+var curId;
+
 // Add item to list on click
 $('.add-item').click(function(event) {
   event.preventDefault();
@@ -11,6 +13,31 @@ $('.add-item').click(function(event) {
     method: 'POST',
     url: '/add-item',
     data: {content: $('.add-input').val()}
+  })
+    .done( function(msg) {
+      $('.add-input').val('');
+
+      $.ajax({
+        method: 'GET',
+        url: '/get-items',
+      })
+        .done(function( msg ) {
+          console.log(msg);
+          $('.all-items').html(generateList(msg));
+      });
+  });
+})
+
+// Edit item from list
+$('.edit-item').click(function(event) {
+  event.preventDefault();
+
+  $.ajax({
+    method: 'PUT',
+    url: '/edit-item/' + curId,
+    data: {
+      content: $('.add-input').val(),
+    }
   })
     .done( function(msg) {
       $('.add-input').val('');
@@ -66,8 +93,8 @@ function generateList(itemData) {
             <li>
               ${current.content}
               <button onclick="delItem('${current._id}')">del</button>
+              <button onclick="editItem('${current._id}', '${current.content}')">edit</button>
             </li>`)
-    // return prevList + '<li>' + current.content + '</li>'
   }, '')
   console.log(itemList);
   return '<ul>' + itemList + '</ul>'
@@ -91,4 +118,10 @@ function delItem(id){
           $('.all-items').html(generateList(msg));
       });
   });
+}
+
+function editItem(id, content){
+  curId = id;
+  console.log(content)
+  $('.add-input').val(content);
 }
