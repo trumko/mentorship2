@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 
 var Item = require('./mongooseConf.js');
 
-// app.use(express.static('public'));
 app.use('/static', express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -23,7 +22,7 @@ app.get('/index.html', function (req, res) {
 })
 
 // Get items from the list
-app.get('/get-items', function (req, res) {
+app.get('/all-items', function (req, res) {
    console.log("Load items from json");
 
    Item.find({}, function(err, items) {
@@ -33,9 +32,7 @@ app.get('/get-items', function (req, res) {
 })
 
 // Add item to the list
-app.post('/add-item', function (req, res) {
-
-  console.log("Add an element to the list");
+app.post('/single-item', function (req, res) {
   var item = new Item(req.body);
 
   item.save(function (err, TodoObject) {
@@ -46,13 +43,12 @@ app.post('/add-item', function (req, res) {
   });
 })
 
-
 // Edit item from the list
-app.put('/edit-item/:id', function (req, res) {
-  console.log("Edit an item from the list");
-  console.log(req.params.id);
-
+app.put('/single-item/:id', function (req, res) {
   Item.findOne({"_id": req.params.id}, function(err, item){
+    if (err) {
+      return console.error(err);
+    }
     item.content = req.body.content;
 
     item.save (function(err, item){
@@ -62,18 +58,14 @@ app.put('/edit-item/:id', function (req, res) {
 })
 
 // Dell items
-app.delete('/delete-items', function (req, res) {
-  console.log("Delete all items from db");
-
+app.delete('/all-items', function (req, res) {
   Item.find({}).remove(function(err, items){
     res.send('delllll allllll')
    })
 })
 
 // Dell item
-app.delete('/delete-item', function (req, res) {
-  console.log("Delete single item in db");
-  console.log(req.body.id)
+app.delete('/single-item', function (req, res) {
 
   Item.find({"_id": req.body.id}).remove(function(err, items){
     res.send('delllll allllll')

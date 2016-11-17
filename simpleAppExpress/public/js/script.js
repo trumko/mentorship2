@@ -1,4 +1,16 @@
-var curId;
+var curId = '';
+
+// Get all items when page is loaded
+$(function() {
+  $.ajax({
+    method: 'GET',
+    url: '/all-items',
+  })
+    .done(function( msg ) {
+      console.log(msg);
+      $('.all-items').html(generateList(msg));
+  });
+});
 
 // Add item to list on click
 $('.add-item').click(function(event) {
@@ -11,7 +23,7 @@ $('.add-item').click(function(event) {
 
   $.ajax({
     method: 'POST',
-    url: '/add-item',
+    url: '/single-item',
     data: {content: $('.add-input').val()}
   })
     .done( function(msg) {
@@ -19,7 +31,7 @@ $('.add-item').click(function(event) {
 
       $.ajax({
         method: 'GET',
-        url: '/get-items',
+        url: '/all-items',
       })
         .done(function( msg ) {
           console.log(msg);
@@ -32,9 +44,13 @@ $('.add-item').click(function(event) {
 $('.edit-item').click(function(event) {
   event.preventDefault();
 
+  if (curId == '') {
+    return
+  }
+
   $.ajax({
     method: 'PUT',
-    url: '/edit-item/' + curId,
+    url: '/single-item/' + curId,
     data: {
       content: $('.add-input').val(),
     }
@@ -44,13 +60,15 @@ $('.edit-item').click(function(event) {
 
       $.ajax({
         method: 'GET',
-        url: '/get-items',
+        url: '/all-items',
       })
         .done(function( msg ) {
           console.log(msg);
           $('.all-items').html(generateList(msg));
       });
   });
+
+  curId = '';
 })
 
 // Delete all items from list
@@ -59,13 +77,12 @@ $('.del-items').click(function(event) {
 
   $.ajax({
     method: 'DELETE',
-    url: '/delete-items',
+    url: '/all-items',
   })
     .done(function(msg) {
-      // $('.all-items').html(generateList(msg.items));
       $.ajax({
         method: 'GET',
-        url: '/get-items',
+        url: '/all-items',
       })
         .done(function( msg ) {
           console.log(msg);
@@ -74,44 +91,19 @@ $('.del-items').click(function(event) {
   });
 })
 
-// Get all items when page is loaded
-$(function() {
-  $.ajax({
-    method: 'GET',
-    url: '/get-items',
-  })
-    .done(function( msg ) {
-      console.log(msg);
-      $('.all-items').html(generateList(msg));
-  });
-});
 
-
-function generateList(itemData) {
-  var itemList = itemData.reduce(function(prevList, current){
-    return (`${prevList}
-            <li>
-              ${current.content}
-              <button onclick="delItem('${current._id}')">del</button>
-              <button onclick="editItem('${current._id}', '${current.content}')">edit</button>
-            </li>`)
-  }, '')
-  console.log(itemList);
-  return '<ul>' + itemList + '</ul>'
-}
 
 function delItem(id){
   console.log(id)
   $.ajax({
     method: 'DELETE',
-    url: '/delete-item',
+    url: '/single-item',
     data: {id: id}
   })
     .done(function(msg) {
-      // $('.all-items').html(generateList(msg.items));
       $.ajax({
         method: 'GET',
-        url: '/get-items',
+        url: '/items',
       })
         .done(function( msg ) {
           console.log(msg);
@@ -122,6 +114,18 @@ function delItem(id){
 
 function editItem(id, content){
   curId = id;
-  console.log(content)
   $('.add-input').val(content);
+}
+
+function generateList(itemData) {
+  var itemList = itemData.reduce(function(prevList, current){
+    return (`${prevList}
+            <li>
+              <button onclick="delItem('${current._id}')">del</button>
+              <button onclick="editItem('${current._id}', '${current.content}')">edit</button>
+              <span>${current.content}</span>
+            </li>`)
+  }, '')
+  console.log(itemList);
+  return '<ul>' + itemList + '</ul>'
 }
