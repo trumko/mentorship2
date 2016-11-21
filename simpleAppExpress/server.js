@@ -35,12 +35,12 @@ app.get('/all-items', function (req, res) {
 
 // Add item
 io.on('connection', function(socket){
-  socket.on('item message', function(msg){
+  socket.on('add item', function(msg){
     var item = new Item({content: msg});
 
     item.save(function (err, TodoObject) {
       Item.find({}, function(err, items) {
-        io.emit('item message', items)
+        io.emit('all messages', items)
       })
 
     });

@@ -3,6 +3,10 @@ var socket = io();
 var curId = '';
 var isAdd = true;
 
+socket.on('all messages', function(msg){
+  console.log(msg);
+  $('.all-items').html(generateList(msg))
+});
 
 // Get all items when page is loaded
 $(function() {
@@ -16,11 +20,21 @@ $(function() {
   });
 });
 
-// Add item to list on click
+// Check if we add or edit item
 $('.add-item').click(function(event) {
   event.preventDefault();
   isAdd ? addItem() : editItem()
 })
+
+function addItem() {
+  if ($('.add-input').val().trim() == '') {
+    return;
+  }
+
+  socket.emit('add item', $('.add-input').val());
+  $('.add-input').val('');
+  return false;
+};
 
 // Edit item from list
   function editItem() {
@@ -71,21 +85,6 @@ $('.del-items').click(function(event) {
       });
   });
 })
-
-function addItem() {
-  if ($('.add-input').val().trim() == '') {
-    return;
-  }
-
-  socket.emit('item message', $('.add-input').val());
-  $('.add-input').val('');
-  return false;
-  };
-
-  socket.on('item message', function(msg){
-    console.log(msg);
-    $('.all-items').html(generateList(msg))
-});
 
 function onDelItem(id){
   $.ajax({
