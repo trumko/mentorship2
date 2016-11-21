@@ -14,7 +14,8 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "mongoose": "^4.6.8",
-    "multer": "^1.2.0"
+    "multer": "^1.2.0",
+    "socket.io": "^1.6.0"
   },
   "devDependencies": {
     "eslint": "^3.9.1",

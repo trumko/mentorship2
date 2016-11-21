@@ -1,5 +1,8 @@
+var socket = io();
+
 var curId = '';
 var isAdd = true;
+
 
 // Get all items when page is loaded
 $(function() {
@@ -8,7 +11,7 @@ $(function() {
     url: '/all-items',
   })
     .done(function( msg ) {
-      console.log(msg);
+      // console.log(msg);
       $('.all-items').html(generateList(msg));
   });
 });
@@ -74,24 +77,15 @@ function addItem() {
     return;
   }
 
-  $.ajax({
-    method: 'POST',
-    url: '/single-item',
-    data: {content: $('.add-input').val()}
-  })
-    .done( function(msg) {
-      $('.add-input').val('');
+  socket.emit('item message', $('.add-input').val());
+  $('.add-input').val('');
+  return false;
+  };
 
-      $.ajax({
-        method: 'GET',
-        url: '/all-items',
-      })
-        .done(function( msg ) {
-          console.log(msg);
-          $('.all-items').html(generateList(msg));
-      });
-  });
-}
+  socket.on('item message', function(msg){
+    console.log(msg);
+    $('.all-items').html(generateList(msg))
+});
 
 function onDelItem(id){
   $.ajax({
@@ -127,6 +121,6 @@ function generateList(itemData) {
               <span>${current.content}</span>
             </li>`)
   }, '')
-  console.log(itemList);
+  // console.log(itemList);
   return '<ul>' + itemList + '</ul>'
 }

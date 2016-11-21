@@ -2,9 +2,11 @@ var express = require('express');
 var app = express();
 var fs = require("fs");
 
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-
 var Item = require('./mongooseConf.js');
 
 app.use('/static', express.static('public'));
@@ -31,17 +33,19 @@ app.get('/all-items', function (req, res) {
    })
 })
 
-// Add item to the list
-app.post('/single-item', function (req, res) {
-  var item = new Item(req.body);
+// Add item
+io.on('connection', function(socket){
+  socket.on('item message', function(msg){
+    var item = new Item({content: msg});
 
-  item.save(function (err, TodoObject) {
-    if (err) {
-      res.send(err);
-    }
-      res.send(TodoObject)
+    item.save(function (err, TodoObject) {
+      Item.find({}, function(err, items) {
+        io.emit('item message', items)
+      })
+
+    });
   });
-})
+});
 
 // Edit item from the list
 app.put('/single-item/:id', function (req, res) {
@@ -60,7 +64,7 @@ app.put('/single-item/:id', function (req, res) {
 // Dell items
 app.delete('/all-items', function (req, res) {
   Item.find({}).remove(function(err, items){
-    res.send('delllll allllll')
+    res.send('del all')
    })
 })
 
@@ -68,11 +72,11 @@ app.delete('/all-items', function (req, res) {
 app.delete('/single-item', function (req, res) {
 
   Item.find({"_id": req.body.id}).remove(function(err, items){
-    res.send('delllll allllll')
+    res.send('del item')
    })
 })
 
-var server = app.listen(4000, function () {
+var server = http.listen(4000, function () {
    var host = server.address().address
    var port = server.address().port
    console.log("Example app listening at http://%s:%s", host, port)
