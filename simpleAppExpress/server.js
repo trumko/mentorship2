@@ -1,6 +1,9 @@
+var startApp = require('./startApp');
+
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
+var router = express.Router();
 
 var io = require('socket.io')(http);
 
@@ -11,10 +14,8 @@ var Item = require('./mongooseConf.js');
 app.use('/static', express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
 
-// Load 'index.html' page
-app.get(['/', '/index.html'], function(req, res) {
-  res.sendFile(__dirname + "/" + "index.html");
-})
+// Use Router
+app.use('/', startApp)
 
 // Get items from the list
 io.on('connection', function(socket) {
