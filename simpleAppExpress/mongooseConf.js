@@ -11,10 +11,6 @@ var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
-
-
-
-
   // Create item schema
   var itemSchema = mongoose.Schema({
     content: String
@@ -23,6 +19,4 @@ db.on('error', console.error.bind(console, 'connection error:'));
   // Store item documents in a collection called "items"
   var Item = mongoose.model('List_item', itemSchema);
 
-
-// ???
 module.exports = Item;

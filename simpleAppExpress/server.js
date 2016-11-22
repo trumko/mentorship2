@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-var fs = require("fs");
 var http = require('http').Server(app);
 
 var io = require('socket.io')(http);
@@ -13,20 +12,13 @@ app.use('/static', express.static('public'));
 app.use(bodyParser.urlencoded({extended: false}));
 
 // Load 'index.html' page
-app.get('/', function(req, res) {
-  console.log("Got a GET request for the homepage");
-  res.sendFile(__dirname + "/" + "index.html");
-})
-
-app.get('/index.html', function(req, res) {
-  console.log("Got a GET request for the homepage");
+app.get(['/', '/index.html'], function(req, res) {
   res.sendFile(__dirname + "/" + "index.html");
 })
 
 // Get items from the list
 io.on('connection', function(socket) {
   Item.find({}, function(err, items) {
-    console.log(items);
     io.emit('send all messages', items)
   })
 });
@@ -46,7 +38,6 @@ io.on('connection', function(socket) {
 // Edit item from the list
 io.on('connection', function(socket) {
   socket.on('edit item', function(msg) {
-    console.log(msg.curId, msg.value);
 
     Item.findOne({
       "_id": msg.curId

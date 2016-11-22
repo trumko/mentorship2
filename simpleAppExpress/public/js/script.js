@@ -4,14 +4,8 @@ var curId = '';
 var isAdd = true;
 
 socket.on('send all messages', function(msg) {
-  console.log(msg);
   $('.all-items').html(generateList(msg))
   $('.add-input').val('');
-});
-
-// Get all items when page is loaded
-$(function() {
-  socket.emit('show all items', id);
 });
 
 // Check if we add or edit item
