@@ -17,6 +17,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 // Use Router
 app.use('/', startApp)
 
+app.use(function(err, req, res, next) {
+  res.send('<h1>Something doesn\'t work<h1>');
+})
+
 // Get items from the list
 io.on('connection', function(socket) {
   Item.find({}, function(err, items) {
