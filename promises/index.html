@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Promises</title>
+    <style>
+      div {
+        margin-bottom: 30px;
+        padding: 10px;
+        background: #F5F5F5;
+        border: 1px solid #DCDCDC;
+        text-align: center;
+        min-height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <input onclick="onThenPromise()" type="button" value="promise: .then &amp; .catch"/>
+      <p id="then-promise"></p>
+    </div>
+    <div>
+      <input onclick="onAllPromise()" type="button" value="promise: .all"/>
+      <p id="all-promise"></p>
+    </div>
+    <div>
+      <input onclick="onRacePromise()" type="button" value="promise: .race"/>
+      <p id="race-promise"></p>
+    </div>
+    <div>
+      <input onclick="onResolvePromise()" type="button" value="promise: .resolve &amp; .then"/>
+      <p id="resolve-promise"></p>
+    </div>
+    <div>
+      <input onclick="onRejectPromise()" type="button" value="promise: .reject &amp; .then"/>
+      <p id="reject-promise"></p>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
