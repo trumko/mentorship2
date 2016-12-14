@@ -4,7 +4,25 @@ var racePromise = document.getElementById("race-promise");
 var resolvePromise = document.getElementById("resolve-promise");
 var rejectPromise = document.getElementById("reject-promise");
 
-function promise() {
+//throw Error after second promise
+var promiseWithError = function () {
+  var i = 0;
+  return function () {
+    var time = Math.round(((Math.random() * 3) + 1) * 1000);
+    return new Promise(function(resolve, reject) {
+
+      setTimeout(function() {
+        if (i == 2) {
+          reject()
+        }
+        i++;
+        resolve(time/1000)
+      }, time)
+    });
+  }
+}()
+
+var promise = function() {
   var time = Math.round(((Math.random() * 3) + 1) * 1000);
   return new Promise(function(resolve, reject){
     setTimeout(function() {
@@ -13,20 +31,29 @@ function promise() {
   });
 }
 
-function onThenPromise() {
-  thenPromise.innerHTML = 'Hello World';
 
-  promise()
+function onThenPromise() {
+  promiseWithError()
   .then(function(time) {
-  	thenPromise.innerHTML = 'First promise was executed in ' + time + ' sec.'
-    return promise()
+    thenPromise.innerHTML = 'First promise was executed in ' + time + ' sec.'
+    return promiseWithError()
   })
   .then(function(time) {
-    thenPromise.innerHTML = 'Second promise was executed in ' + time + ' sec.'
-    return promise()
+    thenPromise.innerHTML = 'Second promise was executed in ' + time + ' sec. Next will return an error'
+    return promiseWithError()
+  })
+  .catch(function() {
+    console.log(new Error)
+    // throw new Error
+    return 2000
   })
   .then(function(time) {
-    thenPromise.innerHTML = 'Third promise was executed in ' + time + ' sec.'
+    thenPromise.innerHTML = 'Third promise was executed in ' + time + ' sec, because of error'
+    return promiseWithError()
+  })
+  .then(function(time) {
+    thenPromise.innerHTML = 'Fourth promise was executed in ' + time + ' sec. '
+    return promiseWithError()
   })
   .catch(function() {
     thenPromise.innerHTML = new Error('Houston, we have a problem')
@@ -66,16 +93,15 @@ function onResolvePromise() {
 }
 
 function onRejectPromise() {
-  Promise.resolve(new Error('Houston, we have a problem'))
-  .then(function(result) {
-    rejectPromise.innerHTML = result;
-    return promise()
-  })
+  Promise.reject(new Error('Houston, we have a problem'))
   .then(function(time) {
     rejectPromise.innerHTML = 'Fisrt promise was executed in ' + time + ' sec.'
     return promise()
   })
   .then(function(time) {
     rejectPromise.innerHTML = 'Second promise was executed in ' + time + ' sec.'
+  })
+  .catch(function(err) {
+    rejectPromise.innerHTML = err;
   })
 }
